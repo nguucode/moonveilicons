@@ -82,3 +82,25 @@ test('web-components: <mvi-icon> renders the requested Icon and Style', async ()
   assert.equal(el.attrs['aria-label'], 'Like');
   assert.equal(el.attrs['aria-hidden'], undefined);
 });
+
+test('core ships a woff2 webfont and a CSS class per Icon per Style', () => {
+  const woff2 = readFileSync(pkgFile('core/fonts/moonveilicons.woff2'));
+  assert.equal(woff2.subarray(0, 4).toString(), 'wOF2');
+  const css = readFileSync(pkgFile('core/css/moonveilicons.css'), 'utf8');
+  const codepoints = JSON.parse(readFileSync(new URL('../icons/codepoints.json', import.meta.url), 'utf8'));
+  const icons = JSON.parse(readFileSync(pkgFile('core/icons.json'), 'utf8'));
+  for (const { name, styles } of icons) {
+    for (const style of styles) {
+      const hex = codepoints[`${style}/${name}`];
+      assert.ok(css.includes(`.mvi-${style}-${name}::before { content: '\\${hex}'; }`), `${style}/${name}`);
+    }
+  }
+  assert.match(css, /moonveilicons\.woff2\?v=[0-9a-f]{8}/);
+});
+
+test('codepoints are stable: existing keep theirs, removed are never reused', async () => {
+  const { assignCodepoints } = await import('../scripts/font.mjs');
+  const next = assignCodepoints({ 'outline/a': 'e000', 'outline/gone': 'e001' }, ['outline/b', 'outline/a']);
+  assert.deepEqual(next, { 'outline/a': 'e000', 'outline/gone': 'e001', 'outline/b': 'e002' });
+  assert.deepEqual(assignCodepoints({}, ['solid/x']), { 'solid/x': 'e000' });
+});

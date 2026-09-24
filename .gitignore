@@ -11,3 +11,5 @@ packages/vue/src/index.ts
 packages/web-components/src/icons.ts
 packages/core/svg
 packages/core/icons.json
+packages/core/fonts
+packages/core/css

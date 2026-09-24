@@ -10,7 +10,7 @@
     "lint:icons": "node scripts/lint-icons.mjs",
     "generate": "npm run lint:icons && node scripts/generate.mjs",
     "build": "npm run generate && npm run build --workspaces --if-present",
-    "test": "node --test test/",
+    "test": "node --test test/*.test.mjs",
     "clean": "rm -rf packages/*/dist packages/*/src/icons packages/*/src/index.ts packages/core/svg packages/core/icons.json"
   },
   "devDependencies": {

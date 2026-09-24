@@ -1,0 +1,77 @@
+---
+import '@fontsource-variable/inter';
+import '@fontsource/jetbrains-mono/400.css';
+import 'moonveilicons/css/moonveilicons.css';
+import '../styles/global.css';
+import { version } from '../icons';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+const { title, description = 'Moonveil Icons: an open-source SVG icon set for React, Vue, Web Components, webfont, CDN and CLI.' } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const path = Astro.url.pathname;
+const nav = [
+  { href: `${base}/`, label: 'Icons', active: path === `${base}/` || path === base },
+  { href: `${base}/docs/getting-started`, label: 'Docs', active: path.startsWith(`${base}/docs`) },
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" href={`${base}/favicon.svg`} type="image/svg+xml" />
+    <script is:inline>
+      try {
+        const saved = localStorage.getItem('theme');
+        const dark = saved ? saved === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.classList.toggle('dark', dark);
+      } catch {}
+    </script>
+  </head>
+  <body class="min-h-dvh flex flex-col font-sans antialiased">
+    <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded-md focus:bg-surface focus:px-4 focus:py-2">Skip to content</a>
+    <header class="sticky top-0 z-40 border-b border-border bg-surface/90 backdrop-blur">
+      <div class="mx-auto flex h-14 max-w-6xl items-center gap-6 px-4">
+        <a href={`${base}/`} class="flex items-center gap-2 font-semibold tracking-tight">
+          <span class="grid size-7 place-items-center rounded-md bg-accent text-on-accent"><i class="mvi mvi-solid-star text-base" aria-hidden="true"></i></span>
+          Moonveil Icons
+        </a>
+        <nav aria-label="Main" class="flex gap-1 text-sm">
+          {nav.map((n) => (
+            <a href={n.href} aria-current={n.active ? 'page' : undefined} class:list={['rounded-md px-3 py-2 hover:bg-element-hover', n.active ? 'text-text font-medium' : 'text-text-muted']}>{n.label}</a>
+          ))}
+        </nav>
+        <div class="ml-auto flex items-center gap-1">
+          <a href="https://github.com/nguucode/moonveilicons" class="grid size-11 place-items-center rounded-md text-text-muted hover:bg-element-hover hover:text-text" aria-label="GitHub repository">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.6 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.1 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5Z"/></svg>
+          </a>
+          <button id="theme-toggle" type="button" class="grid size-11 place-items-center rounded-md text-text-muted hover:bg-element-hover hover:text-text" aria-label="Toggle dark mode">
+            <svg class="dark:hidden" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
+            <svg class="hidden dark:block" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><circle cx="12" cy="12" r="5"/><path d="M12 1v3M12 20v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M1 12h3M20 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+    <main id="main" class="flex-1">
+      <slot />
+    </main>
+    <footer class="border-t border-border">
+      <div class="mx-auto flex max-w-6xl flex-wrap justify-between gap-2 px-4 py-6 text-sm text-text-muted">
+        <span>Moonveil Icons v{version} · MIT License</span>
+        <a href="https://www.npmjs.com/package/moonveilicons" class="hover:text-text">npm</a>
+      </div>
+    </footer>
+    <script is:inline>
+      document.getElementById('theme-toggle').addEventListener('click', () => {
+        const dark = document.documentElement.classList.toggle('dark');
+        try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch {}
+      });
+    </script>
+  </body>
+</html>

@@ -1,6 +1,6 @@
 // Builds one manifest from the Icon sources in icons/<style>/ and emits every package's
 // generated files from it. Generated files are gitignored; `npm run build` recreates them.
-import { readdirSync, readFileSync, writeFileSync, mkdirSync, rmSync, existsSync } from 'node:fs';
+import { readdirSync, readFileSync, writeFileSync, mkdirSync, rmSync, existsSync, copyFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { optimize } from 'svgo';
@@ -131,5 +131,10 @@ writeFileSync(
   )};
 `
 );
+
+// npm pages and tarballs show the repo README and LICENSE
+for (const p of ['core', 'react', 'vue', 'web-components']) {
+  for (const f of ['README.md', 'LICENSE']) copyFileSync(join(root, f), join(pkg(p), f));
+}
 
 console.log(`Generated ${icons.length} icons, ${variants.length} components.`);

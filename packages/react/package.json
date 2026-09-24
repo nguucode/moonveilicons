@@ -27,5 +27,20 @@
     "react": "^18.3.1",
     "tsup": "^8.3.5"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nguucode/moonveilicons.git",
+    "directory": "packages/react"
+  },
+  "homepage": "https://ontheshore.biz/moonveilicons/",
+  "bugs": "https://github.com/nguucode/moonveilicons/issues",
+  "keywords": [
+    "moonveilicons",
+    "icons",
+    "react"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
 }

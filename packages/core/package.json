@@ -21,5 +21,19 @@
   },
   "engines": {
     "node": ">=18.3"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nguucode/moonveilicons.git",
+    "directory": "packages/core"
+  },
+  "homepage": "https://ontheshore.biz/moonveilicons/",
+  "bugs": "https://github.com/nguucode/moonveilicons/issues",
+  "keywords": [
+    "moonveilicons",
+    "icons",
+    "svg",
+    "webfont",
+    "cli"
+  ]
 }

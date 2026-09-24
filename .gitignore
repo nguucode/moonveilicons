@@ -16,3 +16,5 @@ packages/core/css
 
 # Astro
 site/.astro
+packages/*/README.md
+packages/*/LICENSE

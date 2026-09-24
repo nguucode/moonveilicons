@@ -23,5 +23,21 @@
     "tsup": "^8.3.5",
     "typescript": "^5.6.3"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nguucode/moonveilicons.git",
+    "directory": "packages/web-components"
+  },
+  "homepage": "https://ontheshore.biz/moonveilicons/",
+  "bugs": "https://github.com/nguucode/moonveilicons/issues",
+  "keywords": [
+    "moonveilicons",
+    "icons",
+    "web-components",
+    "custom-elements"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
 }

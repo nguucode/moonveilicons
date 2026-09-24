@@ -68,120 +68,57 @@ writeFileSync(
   ) + '\n'
 );
 
-// --- Framework packages
-// ponytail: outline Style only until the component API ticket decides how Styles surface in each package.
-const outlineIcons = icons.filter((i) => i.styles.outline).map((i) => ({ ...i, ...i.styles.outline }));
+// --- Framework packages: one component per Icon per Style, named Mvi<Style><Name>
+const variants = icons.flatMap((icon) =>
+  Object.entries(icon.styles).map(([style, { viewBox, inner }]) => ({
+    component: `Mvi${toPascalCase(style)}${icon.pascalName}`,
+    style,
+    name: icon.name,
+    viewBox,
+    inner,
+  }))
+);
 
 fresh(join(pkg('react'), 'src/icons'));
 fresh(join(pkg('vue'), 'src/icons'));
-fresh(join(pkg('web-components'), 'src/icons'));
 
-for (const { name, pascalName, viewBox, inner } of outlineIcons) {
+for (const { component, viewBox, inner } of variants) {
   writeFileSync(
-    join(pkg('react'), 'src/icons', `${pascalName}.tsx`),
-    `import * as React from 'react';
-import type { IconProps } from '../types';
+    join(pkg('react'), 'src/icons', `${component}.tsx`),
+    `import { createIcon } from '../createIcon';
 
-export const ${pascalName} = React.forwardRef<SVGSVGElement, IconProps>(
-  ({ size = 24, ...props }, ref) => (
-    <svg ref={ref} xmlns="http://www.w3.org/2000/svg" viewBox="${viewBox}" width={size} height={size} fill="currentColor" {...props}>
-      ${kebabAttrsToCamel(inner)}
-    </svg>
-  )
-);
-
-${pascalName}.displayName = '${pascalName}';
+export const ${component} = createIcon('${component}', '${viewBox}', <>${kebabAttrsToCamel(inner)}</>);
 `
   );
-
   writeFileSync(
-    join(pkg('vue'), 'src/icons', `${pascalName}.ts`),
-    `import { defineComponent, h } from 'vue';
+    join(pkg('vue'), 'src/icons', `${component}.ts`),
+    `import { createIcon } from '../createIcon';
 
-export const ${pascalName} = defineComponent({
-  name: '${pascalName}',
-  props: { size: { type: [Number, String], default: 24 } },
-  setup(props) {
-    return () =>
-      h('svg', {
-        xmlns: 'http://www.w3.org/2000/svg',
-        viewBox: '${viewBox}',
-        width: props.size,
-        height: props.size,
-        fill: 'currentColor',
-        innerHTML: ${JSON.stringify(inner)},
-      });
-  },
-});
-`
-  );
-
-  writeFileSync(
-    join(pkg('web-components'), 'src/icons', `${name}.ts`),
-    `const template = document.createElement('template');
-template.innerHTML = \`
-  <style>
-    :host { display: inline-block; line-height: 0; color: inherit; }
-    svg { display: block; }
-  </style>
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="${viewBox}" fill="currentColor">${inner}</svg>
-\`;
-
-export class MoonveilIcon${pascalName} extends HTMLElement {
-  static get observedAttributes() {
-    return ['size', 'color'];
-  }
-
-  private svg: SVGSVGElement;
-
-  constructor() {
-    super();
-    const shadow = this.attachShadow({ mode: 'open' });
-    shadow.appendChild(template.content.cloneNode(true));
-    this.svg = shadow.querySelector('svg') as SVGSVGElement;
-  }
-
-  connectedCallback() {
-    this.applySize();
-    this.applyColor();
-  }
-
-  attributeChangedCallback(name: string) {
-    if (name === 'size') this.applySize();
-    if (name === 'color') this.applyColor();
-  }
-
-  private applySize() {
-    const size = this.getAttribute('size') ?? '24';
-    this.svg.setAttribute('width', size);
-    this.svg.setAttribute('height', size);
-  }
-
-  private applyColor() {
-    this.style.color = this.getAttribute('color') ?? '';
-  }
-}
-
-customElements.define('moonveil-icon-${name}', MoonveilIcon${pascalName});
+export const ${component} = createIcon('${component}', '${viewBox}', ${JSON.stringify(inner)});
 `
   );
 }
 
 const barrel = (lines) => lines.join('\n') + '\n';
+for (const p of ['react', 'vue']) {
+  writeFileSync(
+    join(pkg(p), 'src/index.ts'),
+    barrel([
+      ...(p === 'react' ? [`export type { IconProps } from './createIcon';`] : []),
+      ...variants.map((v) => `export { ${v.component} } from './icons/${v.component}';`),
+    ])
+  );
+}
+
+// Web component: every Icon bundled into one map keyed "<style>/<name>" -> [viewBox, inner]
 writeFileSync(
-  join(pkg('react'), 'src/index.ts'),
-  barrel([
-    `export type { IconProps } from './types';`,
-    ...outlineIcons.map((i) => `export { ${i.pascalName} } from './icons/${i.pascalName}';`),
-  ])
-);
-writeFileSync(
-  join(pkg('vue'), 'src/index.ts'),
-  barrel(outlineIcons.map((i) => `export { ${i.pascalName} } from './icons/${i.pascalName}';`))
-);
-writeFileSync(
-  join(pkg('web-components'), 'src/index.ts'),
-  barrel(outlineIcons.map((i) => `export { MoonveilIcon${i.pascalName} } from './icons/${i.name}';`))
+  join(pkg('web-components'), 'src/icons.ts'),
+  `export const icons: Record<string, [string, string]> = ${JSON.stringify(
+    Object.fromEntries(variants.map((v) => [`${v.style}/${v.name}`, [v.viewBox, v.inner]])),
+    null,
+    2
+  )};
+`
 );
 
-console.log(`Generated ${icons.length} icons (${outlineIcons.length} in framework packages).`);
+console.log(`Generated ${icons.length} icons, ${variants.length} components.`);

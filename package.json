@@ -11,7 +11,7 @@
     "generate": "npm run lint:icons && node scripts/generate.mjs",
     "build": "npm run generate && npm run build --workspaces --if-present",
     "test": "node --test test/*.test.mjs",
-    "clean": "rm -rf packages/*/dist packages/*/src/icons packages/*/src/index.ts packages/core/svg packages/core/icons.json"
+    "clean": "rm -rf packages/*/dist packages/react/src/icons packages/react/src/index.ts packages/vue/src/icons packages/vue/src/index.ts packages/web-components/src/icons.ts packages/core/svg packages/core/icons.json"
   },
   "devDependencies": {
     "svgo": "^3.3.2",

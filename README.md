@@ -25,34 +25,43 @@ Then:
 
 ## Usage
 
+Every Icon is exported once per Style as `Mvi<Style><Name>`: `MviOutlineHeart`, `MviSolidHeart`.
+
+Shared props: `size` (default `24`), `color` (default `currentColor`), `rotate` (`90 | 180 | 270`), `flip` (`'horizontal' | 'vertical'`), `title`. Without `title` an icon is decorative (`aria-hidden="true"`); with it, it becomes `role="img"` with a `<title>`.
+
 **React**
 
 ```tsx
-import { Heart } from '@moonveilicons/react';
+import { MviOutlineHeart, MviSolidHeart } from '@moonveilicons/react';
 
-<Heart size={32} />;
+<MviOutlineHeart size={32} />
+<MviSolidHeart color="crimson" rotate={90} title="Liked" />
 ```
 
 **Vue**
 
 ```vue
 <script setup>
-import { Heart } from '@moonveilicons/vue';
+import { MviOutlineHeart, MviSolidHeart } from '@moonveilicons/vue';
 </script>
 
 <template>
-  <Heart :size="32" />
+  <MviOutlineHeart :size="32" />
+  <mvi-solid-heart color="crimson" flip="horizontal" title="Liked" />
 </template>
 ```
 
-**Web Components**
+**Web Component**
+
+One element, every Icon bundled:
 
 ```html
 <script type="module">
   import '@moonveilicons/web-components';
 </script>
 
-<moonveil-icon-heart size="32" color="crimson"></moonveil-icon-heart>
+<mvi-icon name="heart"></mvi-icon>
+<mvi-icon name="heart" type="solid" size="32" color="crimson" rotate="90" title="Liked"></mvi-icon>
 ```
 
 ## Development

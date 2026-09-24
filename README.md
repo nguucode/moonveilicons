@@ -1,9 +1,10 @@
 # Moonveil Icons
 
-A multi-framework SVG icon library. Source icons live once in [`icons/`](./icons) and are compiled into three published packages:
+A multi-framework SVG icon library. Icon sources live once in [`icons/`](./icons) and are compiled into these published packages:
 
+- [`moonveilicons`](./packages/core) — optimized SVGs and `icons.json` metadata
 - [`@moonveilicons/react`](./packages/react) — React components
-- [`@moonveilicons/vue`](./packages/vue) — Vue 3 SFC components
+- [`@moonveilicons/vue`](./packages/vue) — Vue 3 components
 - [`@moonveilicons/web-components`](./packages/web-components) — framework-agnostic custom elements
 
 ## Adding an icon
@@ -58,5 +59,8 @@ import { Heart } from '@moonveilicons/vue';
 
 ```bash
 npm install
-npm run build
+npm run build   # lint icons, generate sources, build every package
+npm test        # smoke-test the built packages
 ```
+
+Generated sources (`packages/*/src/icons`, barrels, `packages/core/svg`, `icons.json`) are gitignored; `npm run build` recreates them. CI runs build and test on every PR.

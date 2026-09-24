@@ -1,0 +1,14 @@
+{
+  "name": "moonveilicons",
+  "version": "0.0.0",
+  "description": "Moonveil Icons: optimized SVG sources and icon metadata",
+  "files": [
+    "svg",
+    "icons.json"
+  ],
+  "exports": {
+    "./icons.json": "./icons.json",
+    "./svg/*": "./svg/*"
+  },
+  "license": "MIT"
+}

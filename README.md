@@ -8,9 +8,19 @@ A multi-framework SVG icon library. Source icons live once in [`icons/`](./icons
 
 ## Adding an icon
 
-1. Drop a 24x24 `viewBox="0 0 24 24"` SVG into `icons/`, using `stroke="currentColor"` so consumers can recolor it.
-2. Run `npm run generate` to regenerate the React, Vue, and web component sources.
-3. Run `npm run build` to build all packages.
+Icon sources live in `icons/<style>/<name>.svg`, where `<style>` is `outline` or `solid`. An Icon may exist in one Style or both.
+
+- `viewBox="0 0 24 24"`, keeping a 2px margin (20×20 live area).
+- **Filled paths only**: run "Outline stroke" before exporting. No `stroke` attributes (see [ADR 0001](./docs/adr/0001-filled-icon-sources.md)).
+- One colour: leave `fill` unset or use `currentColor`. No styles, scripts, images or text.
+- Names are kebab-case `a-z0-9`, general to specific (`arrow-right`, `user-plus`), with no Style suffix.
+- Optional search metadata goes in [`icons/meta.json`](./icons/meta.json): `{ "<name>": { "category": "...", "tags": ["..."] } }`.
+
+Then:
+
+1. `npm run lint:icons` checks the rules above.
+2. `npm run generate` lints, then regenerates the React, Vue, and web component sources.
+3. `npm run build` builds all packages.
 
 ## Usage
 

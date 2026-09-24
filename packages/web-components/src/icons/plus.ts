@@ -4,8 +4,8 @@ template.innerHTML = `
     :host { display: inline-block; line-height: 0; color: inherit; }
     svg { display: block; }
   </style>
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M12 4v16m-8-8h16"/>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M11.02 20.2 11 13l-7.2-.02-.36-.15-.15-.12-.21-.33L3 12l.08-.38.21-.33.33-.21.18-.06L11 11l.02-7.2.15-.36.12-.15.33-.21L12 3l.38.08.18.09.27.27.15.36L13 11l7.2.02.18.06.33.21.21.33.08.38-.08.38-.21.33-.33.21-.18.06L13 13l-.02 7.2-.06.18-.21.33-.33.21L12 21l-.38-.08-.33-.21-.21-.33Z"/>
   </svg>
 `;
 

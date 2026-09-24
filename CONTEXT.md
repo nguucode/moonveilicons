@@ -19,3 +19,11 @@ _Avoid_: Raw icon, original
 **Surface**:
 One way consumers receive the icons: the core package, React, Vue, Web Component, webfont + CSS, CDN, CLI, or the docs site.
 _Avoid_: Target, platform, output, flavour
+
+**Category**:
+The single group an Icon is filed under for browsing (e.g. `arrows`).
+_Avoid_: Group, collection, set
+
+**Tag**:
+A search keyword attached to an Icon, beyond its name.
+_Avoid_: Keyword, alias, label

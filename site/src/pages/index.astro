@@ -1,0 +1,22 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import IconBrowser from '../components/IconBrowser';
+import { icons } from '../icons';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<BaseLayout title="Moonveil Icons">
+  <div class="mx-auto max-w-6xl px-4">
+    <section class="py-12 md:py-16">
+      <h1 class="text-4xl font-semibold tracking-tight md:text-5xl" style="letter-spacing:-0.02em">Moonveil Icons</h1>
+      <p class="mt-3 max-w-xl text-lg text-text-muted">An open-source icon set in outline and solid, for React, Vue, Web Components, webfont, CDN and the command line.</p>
+      <div class="mt-6 flex flex-wrap items-center gap-3">
+        <code class="rounded-lg border border-border bg-surface-subtle px-4 py-2.5 font-mono text-sm">npm i @moonveilicons/react</code>
+        <a href={`${base}/docs/getting-started`} class="inline-flex h-11 items-center rounded-md bg-accent px-5 font-medium text-on-accent hover:bg-accent-hover">Get started</a>
+      </div>
+    </section>
+    <div class="pb-16">
+      <IconBrowser client:load icons={icons} />
+    </div>
+  </div>
+</BaseLayout>

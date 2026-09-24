@@ -7,6 +7,8 @@ A multi-framework SVG icon library. Icon sources live once in [`icons/`](./icons
 - [`@moonveilicons/vue`](./packages/vue) — Vue 3 components
 - [`@moonveilicons/web-components`](./packages/web-components) — framework-agnostic custom elements
 
+Browse the icons and read the docs at **https://ontheshore.biz/moonveilicons/**.
+
 ## Adding an icon
 
 Icon sources live in `icons/<style>/<name>.svg`, where `<style>` is `outline` or `solid`. An Icon may exist in one Style or both.
@@ -102,10 +104,13 @@ npx moonveilicons add heart star --style solid --format react --out src/icons
 
 ## Development
 
+Requires Node 22.12+ (`nvm use` reads `.nvmrc`).
+
 ```bash
 npm install
-npm run build   # lint icons, generate sources, build every package
-npm test        # smoke-test the built packages
+npm run build          # lint icons, generate sources, build every package and the site
+npm test               # smoke-test the built packages
+npm run dev -w site    # docs site at http://localhost:4321/moonveilicons/
 ```
 
-Generated sources (`packages/*/src/icons`, barrels, `packages/core/svg`, `icons.json`) are gitignored; `npm run build` recreates them. CI runs build and test on every PR.
+Generated sources (`packages/*/src/icons`, barrels, `packages/core/svg`, `icons.json`) are gitignored; `npm run build` recreates them. CI runs build and test on every PR; every push to `main` deploys the site (`site/`, Astro) to GitHub Pages.

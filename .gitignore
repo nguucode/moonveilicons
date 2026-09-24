@@ -13,3 +13,6 @@ packages/core/svg
 packages/core/icons.json
 packages/core/fonts
 packages/core/css
+
+# Astro
+site/.astro

@@ -2,7 +2,7 @@
 
 A multi-framework SVG icon library. Icon sources live once in [`icons/`](./icons) and are compiled into these published packages:
 
-- [`moonveilicons`](./packages/core) — optimized SVGs, `icons.json` metadata, woff2 webfont + CSS
+- [`moonveilicons`](./packages/core) — optimized SVGs, `icons.json` metadata, woff2 webfont + CSS, and the CLI
 - [`@moonveilicons/react`](./packages/react) — React components
 - [`@moonveilicons/vue`](./packages/vue) — Vue 3 components
 - [`@moonveilicons/web-components`](./packages/web-components) — framework-agnostic custom elements
@@ -87,6 +87,18 @@ Utility classes (they also work on the React/Vue components; rotate, flip and an
 **Raw SVG**
 
 `https://cdn.jsdelivr.net/npm/moonveilicons/svg/<style>/<name>.svg`, or `moonveilicons/svg/<style>/<name>.svg` from npm. `moonveilicons/icons.json` lists every Icon with its Styles, category and tags.
+
+**CLI**
+
+Search the set and copy Icons into your project as standalone files (no runtime dependency). Works offline.
+
+```bash
+npx moonveilicons search heart
+npx moonveilicons list --category social
+npx moonveilicons add heart star --style solid --format react --out src/icons
+```
+
+`--format` is `svg` (default, `mvi-<style>-<name>.svg`), `react` (`Mvi<Style><Name>.tsx`) or `vue` (`Mvi<Style><Name>.vue`). Existing files are kept unless you pass `--force`.
 
 ## Development
 

@@ -104,3 +104,28 @@ test('codepoints are stable: existing keep theirs, removed are never reused', as
   assert.deepEqual(next, { 'outline/a': 'e000', 'outline/gone': 'e001', 'outline/b': 'e002' });
   assert.deepEqual(assignCodepoints({}, ['solid/x']), { 'solid/x': 'e000' });
 });
+
+test('cli: search, add in every format, and refuse bad input', async () => {
+  const { spawnSync } = await import('node:child_process');
+  const { mkdtempSync } = await import('node:fs');
+  const { tmpdir } = await import('node:os');
+  const { join } = await import('node:path');
+  const bin = new URL('../packages/core/bin/moonveilicons.mjs', import.meta.url).pathname;
+  const cli = (...args) => spawnSync(process.execPath, [bin, ...args], { encoding: 'utf8' });
+
+  assert.match(cli('search', 'love').stdout, /^heart\s+outline, solid/);
+  assert.equal(cli('search', 'zzz').status, 1);
+
+  const out = mkdtempSync(join(tmpdir(), 'mvi-'));
+  assert.equal(cli('add', 'heart', '--out', out).status, 0);
+  assert.match(readFileSync(join(out, 'mvi-outline-heart.svg'), 'utf8'), /^<svg[^>]*viewBox="0 0 24 24"/);
+  assert.equal(cli('add', 'heart', '--style', 'solid', '--format', 'react', '--out', out).status, 0);
+  assert.match(readFileSync(join(out, 'MviSolidHeart.tsx'), 'utf8'), /export function MviSolidHeart/);
+  assert.equal(cli('add', 'star', '--format', 'vue', '--out', out).status, 0);
+  assert.match(readFileSync(join(out, 'MviOutlineStar.vue'), 'utf8'), /<template>/);
+
+  assert.equal(cli('add', 'heart', '--out', out).status, 1, 'no silent overwrite');
+  assert.equal(cli('add', 'heart', '--out', out, '--force').status, 0);
+  assert.equal(cli('add', 'check', '--style', 'solid', '--out', out).status, 1);
+  assert.equal(cli('add', 'nope', '--out', out).status, 1);
+});

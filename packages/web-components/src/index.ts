@@ -1,6 +1,6 @@
-export { ShoalIconArrowRight } from './icons/arrow-right';
-export { ShoalIconCheck } from './icons/check';
-export { ShoalIconClose } from './icons/close';
-export { ShoalIconHeart } from './icons/heart';
-export { ShoalIconPlus } from './icons/plus';
-export { ShoalIconStar } from './icons/star';
+export { MoonveilIconArrowRight } from './icons/arrow-right';
+export { MoonveilIconCheck } from './icons/check';
+export { MoonveilIconClose } from './icons/close';
+export { MoonveilIconHeart } from './icons/heart';
+export { MoonveilIconPlus } from './icons/plus';
+export { MoonveilIconStar } from './icons/star';

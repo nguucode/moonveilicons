@@ -1,7 +1,7 @@
 {
-  "name": "@shoal-icons/web-components",
+  "name": "@moonveilicons/web-components",
   "version": "0.0.0",
-  "description": "Shoal Icons as framework-agnostic Web Components",
+  "description": "Moonveil Icons as framework-agnostic Web Components",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",

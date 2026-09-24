@@ -1,8 +1,8 @@
 {
-  "name": "shoal-icons",
+  "name": "moonveilicons-repo",
   "private": true,
   "version": "0.0.0",
-  "description": "Shoal Icons: a multi-framework SVG icon library (React, Vue, Web Components).",
+  "description": "Moonveil Icons: a multi-framework SVG icon library (React, Vue, Web Components).",
   "workspaces": [
     "packages/*"
   ],

@@ -1,16 +1,16 @@
 {
-  "name": "@shoal-icons/vue",
+  "name": "@moonveilicons/vue",
   "version": "0.0.0",
-  "description": "Shoal Icons for Vue 3",
+  "description": "Moonveil Icons for Vue 3",
   "type": "module",
-  "main": "./dist/shoal-icons-vue.cjs.js",
-  "module": "./dist/shoal-icons-vue.es.js",
+  "main": "./dist/moonveilicons-vue.cjs.js",
+  "module": "./dist/moonveilicons-vue.es.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/shoal-icons-vue.es.js",
-      "require": "./dist/shoal-icons-vue.cjs.js"
+      "import": "./dist/moonveilicons-vue.es.js",
+      "require": "./dist/moonveilicons-vue.cjs.js"
     }
   },
   "files": [

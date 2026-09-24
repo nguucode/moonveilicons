@@ -131,7 +131,7 @@ template.innerHTML = \`
   </svg>
 \`;
 
-export class ShoalIcon${pascalName} extends HTMLElement {
+export class MoonveilIcon${pascalName} extends HTMLElement {
   static get observedAttributes() {
     return ['size', 'color'];
   }
@@ -167,7 +167,7 @@ export class ShoalIcon${pascalName} extends HTMLElement {
   }
 }
 
-customElements.define('shoal-icon-${name}', ShoalIcon${pascalName});
+customElements.define('moonveil-icon-${name}', MoonveilIcon${pascalName});
 `
   );
 }
@@ -199,7 +199,7 @@ writeFileSync(
 // Web components barrel
 writeFileSync(
   join(root, 'packages/web-components/src/index.ts'),
-  `${icons.map((i) => `export { ShoalIcon${i.pascalName} } from './icons/${i.name}';`).join('\n')}
+  `${icons.map((i) => `export { MoonveilIcon${i.pascalName} } from './icons/${i.name}';`).join('\n')}
 `
 );
 

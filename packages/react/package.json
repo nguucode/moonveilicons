@@ -1,7 +1,7 @@
 {
-  "name": "@shoal-icons/react",
+  "name": "@moonveilicons/react",
   "version": "0.0.0",
-  "description": "Shoal Icons for React",
+  "description": "Moonveil Icons for React",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",

@@ -11,9 +11,9 @@ const errors = [];
 const names = new Set();
 
 for (const entry of readdirSync(iconsDir, { withFileTypes: true })) {
-  if (entry.name === 'meta.json') continue;
+  if (entry.name === 'meta.json' || entry.name === 'codepoints.json') continue;
   if (!entry.isDirectory() || !STYLES.includes(entry.name)) {
-    errors.push(`icons/${entry.name}: only ${STYLES.join('/')} folders and meta.json belong in icons/`);
+    errors.push(`icons/${entry.name}: only ${STYLES.join('/')} folders, meta.json and codepoints.json belong in icons/`);
   }
 }
 

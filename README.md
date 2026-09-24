@@ -2,7 +2,7 @@
 
 A multi-framework SVG icon library. Icon sources live once in [`icons/`](./icons) and are compiled into these published packages:
 
-- [`moonveilicons`](./packages/core) — optimized SVGs and `icons.json` metadata
+- [`moonveilicons`](./packages/core) — optimized SVGs, `icons.json` metadata, woff2 webfont + CSS
 - [`@moonveilicons/react`](./packages/react) — React components
 - [`@moonveilicons/vue`](./packages/vue) — Vue 3 components
 - [`@moonveilicons/web-components`](./packages/web-components) — framework-agnostic custom elements
@@ -21,7 +21,7 @@ Then:
 
 1. `npm run lint:icons` checks the rules above.
 2. `npm run generate` lints, then regenerates the React, Vue, and web component sources.
-3. `npm run build` builds all packages.
+3. `npm run build` builds all packages. Commit the updated `icons/codepoints.json`: it pins each webfont glyph's codepoint so it never moves between releases.
 
 ## Usage
 
@@ -63,6 +63,30 @@ One element, every Icon bundled:
 <mvi-icon name="heart"></mvi-icon>
 <mvi-icon name="heart" type="solid" size="32" color="crimson" rotate="90" title="Liked"></mvi-icon>
 ```
+
+**Webfont + CSS**
+
+```html
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/moonveilicons/css/moonveilicons.css">
+
+<i class="mvi mvi-outline-heart"></i>
+<i class="mvi mvi-solid-heart mvi-lg mvi-beat"></i>
+```
+
+Or `import 'moonveilicons/css/moonveilicons.css'` from npm. Pin a version on the CDN (`moonveilicons@1`) in production.
+
+Utility classes (they also work on the React/Vue components; rotate, flip and animations also on `<mvi-icon>`):
+
+| Class | Effect |
+| --- | --- |
+| `mvi-xs` `mvi-sm` `mvi-md` `mvi-lg` `mvi-xl` | 16 / 20 / 24 / 32 / 48px |
+| `mvi-rotate-90` `mvi-rotate-180` `mvi-rotate-270` | rotate |
+| `mvi-flip-horizontal` `mvi-flip-vertical` | mirror |
+| `mvi-spin` `mvi-pulse` `mvi-beat` | animate (disabled under `prefers-reduced-motion`) |
+
+**Raw SVG**
+
+`https://cdn.jsdelivr.net/npm/moonveilicons/svg/<style>/<name>.svg`, or `moonveilicons/svg/<style>/<name>.svg` from npm. `moonveilicons/icons.json` lists every Icon with its Styles, category and tags.
 
 ## Development
 

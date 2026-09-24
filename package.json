@@ -11,12 +11,15 @@
     "generate": "npm run lint:icons && node scripts/generate.mjs",
     "build": "npm run generate && npm run build --workspaces --if-present",
     "test": "node --test test/*.test.mjs",
-    "clean": "rm -rf packages/*/dist packages/react/src/icons packages/react/src/index.ts packages/vue/src/icons packages/vue/src/index.ts packages/web-components/src/icons.ts packages/core/svg packages/core/icons.json"
+    "clean": "rm -rf packages/*/dist packages/react/src/icons packages/react/src/index.ts packages/vue/src/icons packages/vue/src/index.ts packages/web-components/src/icons.ts packages/core/svg packages/core/icons.json packages/core/fonts packages/core/css"
   },
   "devDependencies": {
+    "react-dom": "^18.3.1",
+    "svg2ttf": "^6.1.0",
+    "svgicons2svgfont": "^15.0.1",
     "svgo": "^3.3.2",
     "typescript": "^5.6.3",
-    "react-dom": "^18.3.1"
+    "wawoff2": "^2.0.1"
   },
   "license": "MIT"
 }

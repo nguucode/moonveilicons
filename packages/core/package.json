@@ -1,14 +1,18 @@
 {
   "name": "moonveilicons",
   "version": "0.0.0",
-  "description": "Moonveil Icons: optimized SVG sources and icon metadata",
+  "description": "Moonveil Icons: optimized SVGs, icon metadata, webfont and CSS",
   "files": [
     "svg",
-    "icons.json"
+    "icons.json",
+    "fonts",
+    "css"
   ],
   "exports": {
     "./icons.json": "./icons.json",
-    "./svg/*": "./svg/*"
+    "./svg/*": "./svg/*",
+    "./css/*": "./css/*",
+    "./fonts/*": "./fonts/*"
   },
   "license": "MIT"
 }

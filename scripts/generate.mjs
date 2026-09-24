@@ -4,6 +4,7 @@ import { readdirSync, readFileSync, writeFileSync, mkdirSync, rmSync, existsSync
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { optimize } from 'svgo';
+import { buildFont } from './font.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const iconsDir = join(root, 'icons');
@@ -67,6 +68,16 @@ writeFileSync(
     2
   ) + '\n'
 );
+
+// --- Webfont + CSS (core)
+const { woff2, css } = await buildFont(
+  icons.flatMap((icon) => Object.entries(icon.styles).map(([style, { svg }]) => ({ style, name: icon.name, svg }))),
+  join(iconsDir, 'codepoints.json')
+);
+fresh(join(pkg('core'), 'fonts'));
+fresh(join(pkg('core'), 'css'));
+writeFileSync(join(pkg('core'), 'fonts/moonveilicons.woff2'), woff2);
+writeFileSync(join(pkg('core'), 'css/moonveilicons.css'), css);
 
 // --- Framework packages: one component per Icon per Style, named Mvi<Style><Name>
 const variants = icons.flatMap((icon) =>

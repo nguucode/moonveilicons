@@ -1,84 +1,90 @@
-import { readdirSync, readFileSync, writeFileSync, mkdirSync, rmSync } from 'node:fs';
+// Builds one manifest from the Icon sources in icons/<style>/ and emits every package's
+// generated files from it. Generated files are gitignored; `npm run build` recreates them.
+import { readdirSync, readFileSync, writeFileSync, mkdirSync, rmSync, existsSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { optimize } from 'svgo';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const root = join(__dirname, '..');
-// ponytail: outline Style only until the component API ticket decides how Styles surface in each package.
-const iconsDir = join(root, 'icons/outline');
+const root = join(dirname(fileURLToPath(import.meta.url)), '..');
+const iconsDir = join(root, 'icons');
+const STYLES = ['outline', 'solid'];
+const pkg = (p) => join(root, 'packages', p);
 
-const reactIconsDir = join(root, 'packages/react/src/icons');
-const vueIconsDir = join(root, 'packages/vue/src/icons');
-const wcIconsDir = join(root, 'packages/web-components/src/icons');
+const svgoConfig = {
+  multipass: true,
+  plugins: [{ name: 'preset-default', params: { overrides: { removeViewBox: false } } }],
+};
 
-for (const dir of [reactIconsDir, vueIconsDir, wcIconsDir]) {
+const toPascalCase = (kebab) =>
+  kebab.split('-').map((part) => part[0].toUpperCase() + part.slice(1)).join('');
+
+const kebabAttrsToCamel = (markup) =>
+  markup.replace(
+    /(\s)([a-zA-Z][a-zA-Z0-9]*(?:-[a-zA-Z0-9]+)+)(?==)/g,
+    (_, space, attr) => space + attr.replace(/-([a-z0-9])/g, (_m, c) => c.toUpperCase())
+  );
+
+function extractSvg(optimizedSvg) {
+  const match = optimizedSvg.match(/<svg[^>]*viewBox="([^"]+)"[^>]*>([\s\S]*)<\/svg>/);
+  if (!match) throw new Error(`Could not parse optimized SVG: ${optimizedSvg}`);
+  return { viewBox: match[1], inner: match[2].trim() };
+}
+
+function fresh(dir) {
   rmSync(dir, { recursive: true, force: true });
   mkdirSync(dir, { recursive: true });
 }
 
-const svgoConfig = {
-  multipass: true,
-  plugins: [
-    {
-      name: 'preset-default',
-      params: { overrides: { removeViewBox: false } },
-    },
-  ],
-};
-
-function toPascalCase(kebab) {
-  return kebab
-    .split('-')
-    .map((part) => part[0].toUpperCase() + part.slice(1))
-    .join('');
-}
-
-function kebabAttrsToCamel(markup) {
-  return markup.replace(
-    /(\s)([a-zA-Z][a-zA-Z0-9]*(?:-[a-zA-Z0-9]+)+)(?==)/g,
-    (_, space, attr) => space + attr.replace(/-([a-z0-9])/g, (_m, c) => c.toUpperCase())
-  );
-}
-
-function extractSvg(optimizedSvg) {
-  const match = optimizedSvg.match(/<svg[^>]*viewBox="([^"]+)"[^>]*>([\s\S]*)<\/svg>/);
-  if (!match) {
-    throw new Error(`Could not parse optimized SVG: ${optimizedSvg}`);
+// --- Manifest: { name, pascalName, category, tags, styles: { outline?: { viewBox, inner, svg } } }
+const meta = JSON.parse(readFileSync(join(iconsDir, 'meta.json'), 'utf8'));
+const byName = new Map();
+for (const style of STYLES) {
+  const dir = join(iconsDir, style);
+  if (!existsSync(dir)) continue;
+  for (const file of readdirSync(dir).filter((f) => f.endsWith('.svg')).sort()) {
+    const name = file.replace(/\.svg$/, '');
+    const { data: svg } = optimize(readFileSync(join(dir, file), 'utf8'), svgoConfig);
+    if (!byName.has(name)) {
+      byName.set(name, { name, pascalName: toPascalCase(name), ...meta[name], styles: {} });
+    }
+    byName.get(name).styles[style] = { ...extractSvg(svg), svg };
   }
-  const [, viewBox, inner] = match;
-  return { viewBox, inner: inner.trim() };
 }
+const icons = [...byName.values()].sort((a, b) => a.name.localeCompare(b.name));
 
-const files = readdirSync(iconsDir).filter((f) => f.endsWith('.svg'));
-const icons = [];
+// --- Core: optimized SVGs + icons.json
+for (const style of STYLES) fresh(join(pkg('core'), 'svg', style));
+for (const icon of icons) {
+  for (const [style, { svg }] of Object.entries(icon.styles)) {
+    writeFileSync(join(pkg('core'), 'svg', style, `${icon.name}.svg`), svg + '\n');
+  }
+}
+writeFileSync(
+  join(pkg('core'), 'icons.json'),
+  JSON.stringify(
+    icons.map(({ name, category, tags, styles }) => ({ name, category, tags, styles: Object.keys(styles) })),
+    null,
+    2
+  ) + '\n'
+);
 
-for (const file of files) {
-  const name = file.replace(/\.svg$/, '');
-  const pascalName = toPascalCase(name);
-  const raw = readFileSync(join(iconsDir, file), 'utf8');
-  const { data: optimized } = optimize(raw, svgoConfig);
-  const { viewBox, inner } = extractSvg(optimized);
+// --- Framework packages
+// ponytail: outline Style only until the component API ticket decides how Styles surface in each package.
+const outlineIcons = icons.filter((i) => i.styles.outline).map((i) => ({ ...i, ...i.styles.outline }));
 
-  icons.push({ name, pascalName, viewBox, inner });
+fresh(join(pkg('react'), 'src/icons'));
+fresh(join(pkg('vue'), 'src/icons'));
+fresh(join(pkg('web-components'), 'src/icons'));
 
-  // React
+for (const { name, pascalName, viewBox, inner } of outlineIcons) {
   writeFileSync(
-    join(reactIconsDir, `${pascalName}.tsx`),
+    join(pkg('react'), 'src/icons', `${pascalName}.tsx`),
     `import * as React from 'react';
 import type { IconProps } from '../types';
 
 export const ${pascalName} = React.forwardRef<SVGSVGElement, IconProps>(
   ({ size = 24, ...props }, ref) => (
-    <svg
-      ref={ref}
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="${viewBox}"
-      width={size}
-      height={size}
-      fill="currentColor"
-      {...props}
-    >
+    <svg ref={ref} xmlns="http://www.w3.org/2000/svg" viewBox="${viewBox}" width={size} height={size} fill="currentColor" {...props}>
       ${kebabAttrsToCamel(inner)}
     </svg>
   )
@@ -88,40 +94,37 @@ ${pascalName}.displayName = '${pascalName}';
 `
   );
 
-  // Vue
   writeFileSync(
-    join(vueIconsDir, `${pascalName}.vue`),
-    `<script setup lang="ts">
-withDefaults(defineProps<{ size?: number | string }>(), { size: 24 });
-</script>
+    join(pkg('vue'), 'src/icons', `${pascalName}.ts`),
+    `import { defineComponent, h } from 'vue';
 
-<template>
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="${viewBox}"
-    :width="size"
-    :height="size"
-    fill="currentColor"
-    v-bind="$attrs"
-  >
-    ${inner}
-  </svg>
-</template>
+export const ${pascalName} = defineComponent({
+  name: '${pascalName}',
+  props: { size: { type: [Number, String], default: 24 } },
+  setup(props) {
+    return () =>
+      h('svg', {
+        xmlns: 'http://www.w3.org/2000/svg',
+        viewBox: '${viewBox}',
+        width: props.size,
+        height: props.size,
+        fill: 'currentColor',
+        innerHTML: ${JSON.stringify(inner)},
+      });
+  },
+});
 `
   );
 
-  // Web Component
   writeFileSync(
-    join(wcIconsDir, `${name}.ts`),
+    join(pkg('web-components'), 'src/icons', `${name}.ts`),
     `const template = document.createElement('template');
 template.innerHTML = \`
   <style>
     :host { display: inline-block; line-height: 0; color: inherit; }
     svg { display: block; }
   </style>
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="${viewBox}" fill="currentColor">
-    ${inner}
-  </svg>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="${viewBox}" fill="currentColor">${inner}</svg>
 \`;
 
 export class MoonveilIcon${pascalName} extends HTMLElement {
@@ -155,8 +158,7 @@ export class MoonveilIcon${pascalName} extends HTMLElement {
   }
 
   private applyColor() {
-    const color = this.getAttribute('color');
-    this.style.color = color ?? '';
+    this.style.color = this.getAttribute('color') ?? '';
   }
 }
 
@@ -165,35 +167,21 @@ customElements.define('moonveil-icon-${name}', MoonveilIcon${pascalName});
   );
 }
 
-// React barrel + shared types
+const barrel = (lines) => lines.join('\n') + '\n';
 writeFileSync(
-  join(root, 'packages/react/src/types.ts'),
-  `import type { SVGProps } from 'react';
-
-export interface IconProps extends SVGProps<SVGSVGElement> {
-  size?: number | string;
-}
-`
+  join(pkg('react'), 'src/index.ts'),
+  barrel([
+    `export type { IconProps } from './types';`,
+    ...outlineIcons.map((i) => `export { ${i.pascalName} } from './icons/${i.pascalName}';`),
+  ])
 );
 writeFileSync(
-  join(root, 'packages/react/src/index.ts'),
-  `export type { IconProps } from './types';
-${icons.map((i) => `export { ${i.pascalName} } from './icons/${i.pascalName}';`).join('\n')}
-`
+  join(pkg('vue'), 'src/index.ts'),
+  barrel(outlineIcons.map((i) => `export { ${i.pascalName} } from './icons/${i.pascalName}';`))
 );
-
-// Vue barrel
 writeFileSync(
-  join(root, 'packages/vue/src/index.ts'),
-  `${icons.map((i) => `export { default as ${i.pascalName} } from './icons/${i.pascalName}.vue';`).join('\n')}
-`
+  join(pkg('web-components'), 'src/index.ts'),
+  barrel(outlineIcons.map((i) => `export { MoonveilIcon${i.pascalName} } from './icons/${i.name}';`))
 );
 
-// Web components barrel
-writeFileSync(
-  join(root, 'packages/web-components/src/index.ts'),
-  `${icons.map((i) => `export { MoonveilIcon${i.pascalName} } from './icons/${i.name}';`).join('\n')}
-`
-);
-
-console.log(`Generated ${icons.length} icons for react, vue, and web-components.`);
+console.log(`Generated ${icons.length} icons (${outlineIcons.length} in framework packages).`);

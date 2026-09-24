@@ -3,30 +3,28 @@
   "version": "0.0.0",
   "description": "Moonveil Icons for Vue 3",
   "type": "module",
-  "main": "./dist/moonveilicons-vue.cjs.js",
-  "module": "./dist/moonveilicons-vue.es.js",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/moonveilicons-vue.es.js",
-      "require": "./dist/moonveilicons-vue.cjs.js"
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     }
   },
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "vite build && vue-tsc --declaration --emitDeclarationOnly -p tsconfig.json"
+    "build": "tsup src/index.ts --format esm,cjs --dts --clean"
   },
   "peerDependencies": {
     "vue": ">=3"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^5.1.4",
-    "vite": "^5.4.10",
-    "vue": "^3.5.12",
-    "vue-tsc": "^2.1.10"
+    "tsup": "^8.3.5",
+    "vue": "^3.5.12"
   },
   "license": "MIT"
 }

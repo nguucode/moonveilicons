@@ -1,10 +1,10 @@
-# Shoal Icons
+# Moonveil Icons
 
 A multi-framework SVG icon library. Source icons live once in [`icons/`](./icons) and are compiled into three published packages:
 
-- [`@shoal-icons/react`](./packages/react) — React components
-- [`@shoal-icons/vue`](./packages/vue) — Vue 3 SFC components
-- [`@shoal-icons/web-components`](./packages/web-components) — framework-agnostic custom elements
+- [`@moonveilicons/react`](./packages/react) — React components
+- [`@moonveilicons/vue`](./packages/vue) — Vue 3 SFC components
+- [`@moonveilicons/web-components`](./packages/web-components) — framework-agnostic custom elements
 
 ## Adding an icon
 
@@ -17,7 +17,7 @@ A multi-framework SVG icon library. Source icons live once in [`icons/`](./icons
 **React**
 
 ```tsx
-import { Heart } from '@shoal-icons/react';
+import { Heart } from '@moonveilicons/react';
 
 <Heart size={32} />;
 ```
@@ -26,7 +26,7 @@ import { Heart } from '@shoal-icons/react';
 
 ```vue
 <script setup>
-import { Heart } from '@shoal-icons/vue';
+import { Heart } from '@moonveilicons/vue';
 </script>
 
 <template>
@@ -38,10 +38,10 @@ import { Heart } from '@shoal-icons/vue';
 
 ```html
 <script type="module">
-  import '@shoal-icons/web-components';
+  import '@moonveilicons/web-components';
 </script>
 
-<shoal-icon-heart size="32" color="crimson"></shoal-icon-heart>
+<moonveil-icon-heart size="32" color="crimson"></moonveil-icon-heart>
 ```
 
 ## Development

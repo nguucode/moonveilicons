@@ -7,8 +7,8 @@ export default defineConfig({
   build: {
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
-      name: 'ShoalIconsVue',
-      fileName: (format) => `shoal-icons-vue.${format === 'es' ? 'es' : 'cjs'}.js`,
+      name: 'MoonveilIconsVue',
+      fileName: (format) => `moonveilicons-vue.${format === 'es' ? 'es' : 'cjs'}.js`,
       formats: ['es', 'cjs'],
     },
     rollupOptions: {

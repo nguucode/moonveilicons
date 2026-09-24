@@ -9,7 +9,7 @@ template.innerHTML = `
   </svg>
 `;
 
-export class ShoalIconStar extends HTMLElement {
+export class MoonveilIconStar extends HTMLElement {
   static get observedAttributes() {
     return ['size', 'color'];
   }
@@ -45,4 +45,4 @@ export class ShoalIconStar extends HTMLElement {
   }
 }
 
-customElements.define('shoal-icon-star', ShoalIconStar);
+customElements.define('moonveil-icon-star', MoonveilIconStar);

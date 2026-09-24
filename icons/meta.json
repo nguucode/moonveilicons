@@ -1,0 +1,8 @@
+{
+  "arrow-right": { "category": "arrows", "tags": ["next", "forward", "direction"] },
+  "check": { "category": "actions", "tags": ["done", "tick", "confirm"] },
+  "close": { "category": "actions", "tags": ["x", "cancel", "dismiss"] },
+  "heart": { "category": "social", "tags": ["like", "love", "favorite"] },
+  "plus": { "category": "actions", "tags": ["add", "new", "create"] },
+  "star": { "category": "social", "tags": ["rating", "favorite", "bookmark"] }
+}

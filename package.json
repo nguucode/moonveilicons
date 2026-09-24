@@ -7,7 +7,8 @@
     "packages/*"
   ],
   "scripts": {
-    "generate": "node scripts/generate.mjs",
+    "lint:icons": "node scripts/lint-icons.mjs",
+    "generate": "npm run lint:icons && node scripts/generate.mjs",
     "build": "npm run generate && npm run build --workspaces",
     "clean": "rm -rf packages/*/dist packages/*/src/icons"
   },

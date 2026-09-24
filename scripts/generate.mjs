@@ -5,7 +5,8 @@ import { optimize } from 'svgo';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, '..');
-const iconsDir = join(root, 'icons');
+// ponytail: outline Style only until the component API ticket decides how Styles surface in each package.
+const iconsDir = join(root, 'icons/outline');
 
 const reactIconsDir = join(root, 'packages/react/src/icons');
 const vueIconsDir = join(root, 'packages/vue/src/icons');
@@ -75,11 +76,7 @@ export const ${pascalName} = React.forwardRef<SVGSVGElement, IconProps>(
       viewBox="${viewBox}"
       width={size}
       height={size}
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      fill="currentColor"
       {...props}
     >
       ${kebabAttrsToCamel(inner)}
@@ -104,11 +101,7 @@ withDefaults(defineProps<{ size?: number | string }>(), { size: 24 });
     viewBox="${viewBox}"
     :width="size"
     :height="size"
-    fill="none"
-    stroke="currentColor"
-    stroke-width="2"
-    stroke-linecap="round"
-    stroke-linejoin="round"
+    fill="currentColor"
     v-bind="$attrs"
   >
     ${inner}
@@ -126,7 +119,7 @@ template.innerHTML = \`
     :host { display: inline-block; line-height: 0; color: inherit; }
     svg { display: block; }
   </style>
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="${viewBox}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="${viewBox}" fill="currentColor">
     ${inner}
   </svg>
 \`;

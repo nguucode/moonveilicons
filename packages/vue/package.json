@@ -26,5 +26,20 @@
     "tsup": "^8.3.5",
     "vue": "^3.5.12"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nguucode/moonveilicons.git",
+    "directory": "packages/vue"
+  },
+  "homepage": "https://ontheshore.biz/moonveilicons/",
+  "bugs": "https://github.com/nguucode/moonveilicons/issues",
+  "keywords": [
+    "moonveilicons",
+    "icons",
+    "vue"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
 }

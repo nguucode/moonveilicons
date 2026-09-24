@@ -1,0 +1,35 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write # GitHub Release
+  id-token: write # npm Trusted Publishing (OIDC) + provenance
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          registry-url: https://registry.npmjs.org
+          cache: npm
+      - run: npm install -g npm@latest # Trusted Publishing needs npm >= 11.5.1
+      - run: npm ci
+      - name: Tag matches package versions
+        run: test "v$(node -p "require('./packages/core/package.json').version")" = "$GITHUB_REF_NAME"
+      - run: npm run build
+      - run: npm test
+      - run: npm run publish:packages
+      - name: Refresh unpinned CDN files
+        run: |
+          for f in css/moonveilicons.css icons.json; do
+            curl -fsS "https://purge.jsdelivr.net/npm/moonveilicons/$f" > /dev/null || true
+          done
+      - run: gh release create "$GITHUB_REF_NAME" --generate-notes --verify-tag
+        env:
+          GH_TOKEN: ${{ github.token }}

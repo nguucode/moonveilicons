@@ -116,3 +116,7 @@ npm run dev -w site    # docs site at http://localhost:4321/moonveilicons/
 Generated sources (`packages/*/src/icons`, barrels, `packages/core/svg`, `icons.json`) are gitignored; `npm run build` recreates them. CI runs build and test on every PR; every push to `main` deploys the site (`site/`, Astro) to GitHub Pages.
 
 Releases: see [docs/releasing.md](./docs/releasing.md).
+
+## Related
+
+- [Zweihänder](https://ontheshore.biz/zweihander/): a React UI kit by the same author, documented in Storybook.
